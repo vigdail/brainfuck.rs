@@ -1,4 +1,4 @@
-#BrainFuck.rs
+# BrainFuck.rs
 
 Rust implementation of [BrainFuck](https://en.wikipedia.org/wiki/Brainfuck) language interpreter.
 
