@@ -6,6 +6,7 @@ pub struct VM {
 	pub ram: Vec<u8>,
 	pub program_pointer: usize,
 	pub mem_pointer: usize,
+	pub stack: Vec<usize>,
 }
 
 #[derive(Copy, Clone, Debug)]

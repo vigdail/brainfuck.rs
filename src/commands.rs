@@ -21,7 +21,7 @@ pub fn prev(state: VM) -> VM {
 
 pub fn inc(state: VM) -> VM {
 	let mut ram = state.ram;
-	ram[state.mem_pointer] += 1;
+	ram[state.mem_pointer] = ram[state.mem_pointer].overflowing_add(1).0;
 	VM {
 		ram,
 		program_pointer: state.program_pointer + 1,
@@ -31,7 +31,7 @@ pub fn inc(state: VM) -> VM {
 
 pub fn dec(state: VM) -> VM {
 	let mut ram = state.ram;
-	ram[state.mem_pointer] -= 1;
+	ram[state.mem_pointer] = ram[state.mem_pointer].overflowing_sub(1).0;
 	VM {
 		ram,
 		program_pointer: state.program_pointer + 1,
@@ -65,26 +65,23 @@ pub fn read(state: VM) -> VM {
 }
 
 pub fn end_while(state: VM) -> VM {
-	let mut level = 0;
-	let mut new_program_pointer = state.program_pointer - 2;
-	for i in (0..state.program_pointer).rev() {
-		match state.program[i] {
-			BFCode::EndWhile => level += 1,
-			BFCode::While => {
-				if level == 0 {
-					new_program_pointer = i;
-					break;
-				} else {
-					level -= 1;
-				}
-			}
-			_ => (),
-		}
-	}
-	VM {
-		program_pointer: new_program_pointer,
-		..state
-	}
+	let mut stack = state.stack.clone();
+	if let Some(new_program_pointer) = stack.pop() {
+		return match state.ram[state.mem_pointer] {
+			0 => VM {
+				program_pointer: state.program_pointer + 1,
+				stack,
+				..state
+			},
+			_ => VM {
+				program_pointer: new_program_pointer,
+				stack,
+				..state
+			},
+		};
+	} else {
+		unreachable!();
+	};
 }
 
 pub fn start_while(state: VM) -> VM {
@@ -111,9 +108,15 @@ pub fn start_while(state: VM) -> VM {
 				..state
 			}
 		}
-		_ => VM {
-			program_pointer: state.program_pointer + 1,
-			..state
-		},
+		_ => {
+			let mut stack = state.stack;
+			stack.push(state.program_pointer);
+			let res = VM {
+				program_pointer: state.program_pointer + 1,
+				stack,
+				..state
+			};
+			res
+		}
 	}
 }

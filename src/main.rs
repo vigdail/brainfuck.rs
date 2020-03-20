@@ -38,6 +38,7 @@ fn init_vm() -> VM {
 		program_pointer: 0,
 		mem_pointer: 0,
 		program: read_program(),
+		stack: Vec::new(),
 	}
 }
 
