@@ -1,4 +1,4 @@
-pub const MEM_SIZE: usize = 30000;
+pub const MEM_SIZE: usize = 2000;
 
 #[derive(Debug)]
 pub struct VM {
@@ -6,6 +6,7 @@ pub struct VM {
 	pub ram: Vec<u8>,
 	pub program_pointer: usize,
 	pub mem_pointer: usize,
+	pub stack: Vec<usize>,
 }
 
 #[derive(Copy, Clone, Debug)]
