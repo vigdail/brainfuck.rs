@@ -1,4 +1,4 @@
-pub const MEM_SIZE: usize = 2000;
+pub const MEM_SIZE: usize = 30000;
 
 #[derive(Debug)]
 pub struct VM {

@@ -20,7 +20,6 @@ fn main() {
 
 fn execute(state: VM) -> VM {
 	let command = state.program[state.program_pointer];
-	// println!("{}: {:?}", state.program_pointer, command);
 	match command {
 		BFCode::Next => commands::next(state),
 		BFCode::Prev => commands::prev(state),

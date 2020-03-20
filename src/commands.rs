@@ -21,7 +21,7 @@ pub fn prev(state: VM) -> VM {
 
 pub fn inc(state: VM) -> VM {
 	let mut ram = state.ram;
-	ram[state.mem_pointer] += 1;
+	ram[state.mem_pointer] = ram[state.mem_pointer].overflowing_add(1).0;
 	VM {
 		ram,
 		program_pointer: state.program_pointer + 1,
@@ -31,7 +31,7 @@ pub fn inc(state: VM) -> VM {
 
 pub fn dec(state: VM) -> VM {
 	let mut ram = state.ram;
-	ram[state.mem_pointer] -= 1;
+	ram[state.mem_pointer] = ram[state.mem_pointer].overflowing_sub(1).0;
 	VM {
 		ram,
 		program_pointer: state.program_pointer + 1,
